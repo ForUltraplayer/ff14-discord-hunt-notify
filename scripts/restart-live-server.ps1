@@ -1,6 +1,8 @@
 $port = 5059
 $configPath = 'config/local.config.json'
 $exampleConfigPath = 'config/local.config.example.json'
+$root = Resolve-Path (Join-Path $PSScriptRoot '..')
+$exePath = Join-Path $root 'ff14-discord-hunt-notify.exe'
 $listener = netstat -ano |
   Select-String "127.0.0.1:$port.*LISTENING" |
   Select-Object -First 1
@@ -23,4 +25,13 @@ if (-not (Test-Path $configPath)) {
 }
 
 Write-Host "Starting live hunt notifier on port $port..."
-node src/server.mjs --config $configPath --hunts config/hunts.as-whitelist.json
+Push-Location $root
+try {
+  if (Test-Path $exePath) {
+    & $exePath --config $configPath --hunts config/hunts.as-whitelist.json
+  } else {
+    node src/server.mjs --config $configPath --hunts config/hunts.as-whitelist.json
+  }
+} finally {
+  Pop-Location
+}

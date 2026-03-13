@@ -76,6 +76,20 @@ powershell -ExecutionPolicy Bypass -File scripts/restart-live-server.ps1
 powershell -ExecutionPolicy Bypass -File scripts/restart-local-server.ps1
 ```
 
+배포용 exe를 사용하는 경우에는:
+
+```text
+start-live.bat
+```
+
+또는
+
+```text
+start-test.bat
+```
+
+만 실행하면 됩니다.
+
 ## 3. ACT / OverlayPlugin에 브리지 오버레이 등록
 
 ACT에서:
@@ -214,3 +228,24 @@ powershell -ExecutionPolicy Bypass -File scripts/download-official-dawntrail-map
 - 지역별 핀 위치 미세보정
 - `blockHunts`, `insHunts` 처리
 - 더 쉬운 배포용 런처 / exe 패키징
+
+## exe 릴리스 빌드
+
+개발 PC에서 아래 스크립트로 배포용 exe + zip을 만들 수 있습니다.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/build-release.ps1 -Version 0.1.0
+```
+
+생성 결과:
+
+- `release/ff14-discord-hunt-notify-win-x64-v0.1.0/`
+- `release/ff14-discord-hunt-notify-win-x64-v0.1.0.zip`
+
+릴리스 zip 안에는 다음이 포함됩니다.
+
+- `ff14-discord-hunt-notify.exe`: 실제 실행 런처
+- `runtime/node.exe`: 번들된 Node 런타임
+- `config/`, `maps/`, `overlay/`, `scripts/`: 실행에 필요한 파일
+
+즉 최종 사용자는 **Node.js를 별도로 설치할 필요가 없습니다.**

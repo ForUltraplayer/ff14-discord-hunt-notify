@@ -4,11 +4,11 @@
     "port": 5055
   },
   "identity": {
-    "detectedBy": "무냥",
-    "instanceLabel": "1"
+    "detectedBy": "ReplaceMe",
+    "instanceLabel": ""
   },
   "discord": {
-    "webhookUrl": "https://discord.com/api/webhooks/1473717295795933216/onitH-VdVD1lxgLfcKC2DYjYx0yLjwHT2bObYv21SHTGxnsWTs71yODHlgDh6gTQGl6y"
+    "webhookUrl": "https://discord.com/api/webhooks/REPLACE_ME"
   },
   "storage": {
     "recordsPath": "../data/records.jsonl",
