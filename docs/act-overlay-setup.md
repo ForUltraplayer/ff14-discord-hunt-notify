@@ -21,7 +21,7 @@ ACT + OverlayPlugin 브리지 등록 절차를 따로 정리한 문서입니다.
 
 예시:
 
-![local.config.json 예시](./configjsonexample.png)
+![local.config.json 예시](./config-local-config-example.png)
 
 ```text
 start-live.bat
@@ -45,7 +45,7 @@ ACT에서:
 2. `OverlayPlugin.dll` 선택
 3. 왼쪽 아래 `추가` 버튼 클릭
 
-![OverlayPlugin.dll 에서 추가 버튼 클릭](./addoverlay.png)
+![OverlayPlugin.dll 에서 추가 버튼 클릭](./act-overlay-add-button.png)
 
 새 오버레이 생성 창에서:
 
@@ -55,7 +55,7 @@ ACT에서:
 
 그 다음 `확인`을 누릅니다.
 
-![커스텀 / MiniParse 선택](./createoverlay.png)
+![커스텀 / MiniParse 선택](./act-overlay-create-dialog.png)
 
 ## 3. 브리지 HTML 선택
 
@@ -68,9 +68,9 @@ ACT에서:
 overlay/ingest-bridge.html
 ```
 
-![URL 오른쪽 버튼으로 파일 선택](./howtosetoverlay.png)
+![URL 오른쪽 버튼으로 파일 선택](./act-overlay-url-browse-button.png)
 
-![ingest-bridge.html 선택](./howtosetoverlay2.png)
+![ingest-bridge.html 선택](./act-overlay-select-ingest-bridge-html.png)
 
 예시 경로:
 
@@ -85,7 +85,7 @@ file:///C:/Users/Administrator/Downloads/ff14-discord-hunt-notify-win-x64-v0.1.0
 - `오버레이 표시`
 - `오버레이 켜기`
 
-![오버레이 표시 / 오버레이 켜기 체크](./offoverlay.png)
+![오버레이 표시 / 오버레이 켜기 체크](./act-overlay-enable-visible.png)
 
 ## 5. 정상 연결 확인
 
@@ -103,7 +103,7 @@ Waiting for filtered log lines
 - `ENDPOINT`
 - `FILTERS`
 
-![브리지 연결 화면 예시](./overlayexample.png)
+![브리지 연결 화면 예시](./act-overlay-bridge-armed-example.png)
 
 ## 안 될 때
 
