@@ -163,21 +163,32 @@ Waiting for filtered log lines
 
 ## 문제 해결
 
-### BAT만 실행한 경우
+### `Local ingest failed` 가 뜨는 경우
 
-서버만 켜지고, 게임 로그가 안 들어와서 알림이 안 옵니다.
-→ 단계 4(ACT 오버레이 등록)를 해주세요.
+브리지가 로컬 서버(`http://127.0.0.1:5059/ingest`)로 보내는 POST가 실패했을 때 뜹니다.
 
-### ACT 오버레이만 등록한 경우
+주요 원인:
 
-로그는 생기지만 받을 서버가 없어서 알림이 안 옵니다.
-→ 단계 3(`start-live.bat` 실행)을 해주세요.
+1. **`start-live.bat`을 안 켰거나, 콘솔창을 닫음**
+   프로그램 창이 닫히면 서버도 같이 종료됩니다.
+2. **포트/엔드포인트가 다름**
+   브리지는 기본적으로 `127.0.0.1:5059/ingest`로 보내는데, 서버가 다른 포트로 떠 있으면 실패합니다.
+3. **ACT 오버레이가 예전 폴더를 보고 있음**
+   릴리스 폴더를 새로 풀었는데, ACT URL이 이전 `overlay/ingest-bridge.html`을 가리키면 잘못된 endpoint 설정을 쓸 수 있습니다.
+4. **5059 포트를 다른 프로그램이 잡고 있음**
+   브리지가 접속은 했지만 우리 서버가 아니라서 404나 이상한 응답을 받을 수 있습니다.
 
-### 오버레이 경로가 예전 폴더인 경우
+### `Bridge connected` 인데 알림이 안 오는 경우
 
-릴리스 zip을 새 폴더에 풀었다면 URL도 새 경로로 바꿔야 합니다.
+ingest는 성공했지만, 서버가 알림 대상이 아니라고 판단한 경우입니다.
 
-### 브리지는 켜졌는데 알림이 안 오는 경우
+- `no-hunt-match`: 마물 화이트리스트에 없는 몹
+- `duplicate`: 이미 최근에 알린 마물 (중복 제한)
+- `event-not-enabled`: 해당 이벤트가 비활성화 상태
+
+이 경우 브리지 자체는 정상이며, 설정이나 감지 조건을 확인해야 합니다.
+
+### 점검 방법
 
 PowerShell에서 아래 명령어로 상태를 확인합니다.
 
@@ -185,6 +196,13 @@ PowerShell에서 아래 명령어로 상태를 확인합니다.
 Invoke-RestMethod 'http://127.0.0.1:5059/health' | ConvertTo-Json -Depth 5
 Invoke-RestMethod 'http://127.0.0.1:5059/debug/recent' | ConvertTo-Json -Depth 6
 ```
+
+해석:
+
+- `/health` 안 열림 → 서버 자체가 안 떠 있음
+- `/health` 열림 + 오버레이에 `Local ingest failed` → ACT 오버레이 URL / 포트 / 구버전 폴더 문제
+- `/debug/recent`에 이벤트가 보임 → ingest는 성공 중
+- `/debug/recent`에 `no-hunt-match`만 뜸 → 브리지는 정상, 감지 조건 문제
 
 ---
 
