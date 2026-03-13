@@ -1,0 +1,81 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 5055
+  },
+  "identity": {
+    "detectedBy": "무냥",
+    "instanceLabel": "1"
+  },
+  "discord": {
+    "webhookUrl": "https://discord.com/api/webhooks/1473717295795933216/onitH-VdVD1lxgLfcKC2DYjYx0yLjwHT2bObYv21SHTGxnsWTs71yODHlgDh6gTQGl6y"
+  },
+  "storage": {
+    "recordsPath": "../data/records.jsonl",
+    "imageOutputDir": "../data/images",
+    "dedupeMinutes": 30
+  },
+  "parser": {
+    "delimiter": "|",
+    "line03": {
+      "lineCode": "03",
+      "idIndex": 2,
+      "nameIndex": 3,
+      "bnpcNameIdIndex": 9,
+      "bnpcIdIndex": 10,
+      "worldXIndex": 17,
+      "worldYIndex": 18,
+      "worldZIndex": 19,
+      "headingIndex": 20
+    },
+    "line40": {
+      "lineCode": "40",
+      "mapIdIndex": 2,
+      "zoneNameIndex": 4,
+      "placeNameIndex": 5
+    },
+    "line04": {
+      "lineCode": "04",
+      "idIndex": 2,
+      "nameIndex": 3,
+      "bnpcNameIdIndex": 9,
+      "bnpcIdIndex": 10,
+      "worldXIndex": 17,
+      "worldYIndex": 18,
+      "worldZIndex": 19,
+      "headingIndex": 20
+    },
+    "line25": {
+      "lineCode": "25",
+      "idIndex": 2,
+      "nameIndex": 3
+    },
+    "line261": {
+      "lineCode": "261"
+    }
+  },
+  "maps": {
+    "sample-map-id": {
+      "zoneName": "Sample Zone",
+      "imagePath": "../maps/sample-grid.svg",
+      "worldAxes": {
+        "horizontal": "x",
+        "vertical": "z"
+      },
+      "calibration": {
+        "worldMinX": -500,
+        "worldMaxX": 500,
+        "worldMinZ": -500,
+        "worldMaxZ": 500,
+        "mapMinX": 1,
+        "mapMaxX": 41,
+        "mapMinY": 1,
+        "mapMaxY": 41,
+        "pixelMinX": 80,
+        "pixelMaxX": 944,
+        "pixelMinY": 80,
+        "pixelMaxY": 944
+      }
+    }
+  }
+}
