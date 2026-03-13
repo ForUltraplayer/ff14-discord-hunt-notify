@@ -1,4 +1,4 @@
-# FFXIV 마물 디스코드 알림기
+# FFXIV 황금 마물 디스코드 알림기
 
 ACT + OverlayPlugin 로그를 받아서 A/S급 마물 발견 시:
 
