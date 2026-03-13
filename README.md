@@ -179,13 +179,12 @@ Waiting for filtered log lines
 
 ### 브리지는 켜졌는데 알림이 안 오는 경우
 
-아래 주소로 상태를 확인합니다.
+PowerShell에서 아래 명령어로 상태를 확인합니다.
 
-```text
-#powershell
+```powershell
 Invoke-RestMethod 'http://127.0.0.1:5059/health' | ConvertTo-Json -Depth 5
 Invoke-RestMethod 'http://127.0.0.1:5059/debug/recent' | ConvertTo-Json -Depth 6
-
+```
 
 ---
 
