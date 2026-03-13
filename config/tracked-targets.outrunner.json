@@ -1,0 +1,40 @@
+[
+  {
+    "key": "outrunner-test",
+    "name": "아웃러너",
+    "category": "test",
+    "rank": null,
+    "alertLabel": "테스트 감지",
+    "alertOn": [
+      "combatant-death",
+      "combatant-remove"
+    ],
+    "bnpcNameIds": [
+      13118
+    ],
+    "bnpcIds": [
+      17502
+    ],
+    "aliases": [
+      "아웃러너",
+      "Outrunner"
+    ]
+  },
+  {
+    "key": "necrosis-test",
+    "name": "네크로시스",
+    "category": "test",
+    "rank": null,
+    "alertLabel": "테스트 감지",
+    "alertOn": [
+      "combatant-add",
+      "combatant-death",
+      "combatant-remove"
+    ],
+    "aliases": [
+      "네크로시스",
+      "Necrosis"
+    ],
+    "defaultMapId": "859"
+  }
+]

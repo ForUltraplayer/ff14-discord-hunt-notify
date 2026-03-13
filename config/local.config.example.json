@@ -1,0 +1,283 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 5059
+  },
+  "identity": {
+    "detectedBy": "ReplaceMe",
+    "instanceLabel": ""
+  },
+  "discord": {
+    "webhookUrl": "https://discord.com/api/webhooks/REPLACE_ME"
+  },
+  "storage": {
+    "recordsPath": "../data/records.jsonl",
+    "imageOutputDir": "../data/images",
+    "dedupeMinutes": 5
+  },
+  "parser": {
+    "delimiter": "|",
+    "line03": {
+      "lineCode": "03",
+      "idIndex": 2,
+      "nameIndex": 3,
+      "bnpcNameIdIndex": 9,
+      "bnpcIdIndex": 10,
+      "worldXIndex": 17,
+      "worldYIndex": 18,
+      "worldZIndex": 19,
+      "headingIndex": 20
+    },
+    "line40": {
+      "lineCode": "40",
+      "mapIdIndex": 2,
+      "zoneNameIndex": 4,
+      "placeNameIndex": 5
+    },
+    "line04": {
+      "lineCode": "04",
+      "idIndex": 2,
+      "nameIndex": 3,
+      "bnpcNameIdIndex": 9,
+      "bnpcIdIndex": 10,
+      "worldXIndex": 17,
+      "worldYIndex": 18,
+      "worldZIndex": 19,
+      "headingIndex": 20
+    },
+    "line25": {
+      "lineCode": "25",
+      "idIndex": 2,
+      "nameIndex": 3
+    },
+    "line261": {
+      "lineCode": "261"
+    }
+  },
+  "maps": {
+    "857": {
+      "zoneName": "Urqopacha",
+      "zoneAliases": [
+        "오르코 파차"
+      ],
+      "imagePath": "../maps/official/urqopacha.png",
+      "imageBounds": {
+        "x": 80,
+        "y": 80,
+        "width": 864,
+        "height": 864
+      },
+      "worldAxes": {
+        "horizontal": "x",
+        "vertical": "y"
+      },
+      "formula": {
+        "offsetX": 0,
+        "offsetY": 0,
+        "sizeFactor": 100
+      },
+      "mapRange": {
+        "minX": 1,
+        "maxX": 41,
+        "minY": 1,
+        "maxY": 41
+      },
+      "pixelBounds": {
+        "minX": 80,
+        "maxX": 944,
+        "minY": 80,
+        "maxY": 944
+      }
+    },
+    "858": {
+      "zoneName": "Kozama'uka",
+      "zoneAliases": [
+        "코자말루 카"
+      ],
+      "imagePath": "../maps/official/kozamauka.png",
+      "imageBounds": {
+        "x": 80,
+        "y": 80,
+        "width": 864,
+        "height": 864
+      },
+      "worldAxes": {
+        "horizontal": "x",
+        "vertical": "y"
+      },
+      "formula": {
+        "offsetX": 0,
+        "offsetY": 0,
+        "sizeFactor": 100
+      },
+      "mapRange": {
+        "minX": 1,
+        "maxX": 41,
+        "minY": 1,
+        "maxY": 41
+      },
+      "pixelBounds": {
+        "minX": 80,
+        "maxX": 944,
+        "minY": 80,
+        "maxY": 944
+      }
+    },
+    "859": {
+      "zoneName": "Yak T'el",
+      "zoneAliases": [
+        "야크텔 밀림"
+      ],
+      "imagePath": "../maps/official/yak-tel.png",
+      "imageBounds": {
+        "x": 80,
+        "y": 80,
+        "width": 864,
+        "height": 864
+      },
+      "worldAxes": {
+        "horizontal": "x",
+        "vertical": "y"
+      },
+      "formula": {
+        "offsetX": 0,
+        "offsetY": 0,
+        "sizeFactor": 100
+      },
+      "mapRange": {
+        "minX": 1,
+        "maxX": 41,
+        "minY": 1,
+        "maxY": 41
+      },
+      "pixelBounds": {
+        "minX": 64,
+        "maxX": 927,
+        "minY": 88,
+        "maxY": 920
+      }
+    },
+    "860": {
+      "zoneName": "Shaaloani",
+      "zoneAliases": [
+        "샬로니 황야"
+      ],
+      "imagePath": "../maps/official/shaaloani.png",
+      "imageBounds": {
+        "x": 80,
+        "y": 80,
+        "width": 864,
+        "height": 864
+      },
+      "worldAxes": {
+        "horizontal": "x",
+        "vertical": "y"
+      },
+      "formula": {
+        "offsetX": 0,
+        "offsetY": 0,
+        "sizeFactor": 100
+      },
+      "mapRange": {
+        "minX": 1,
+        "maxX": 41,
+        "minY": 1,
+        "maxY": 41
+      },
+      "pixelBounds": {
+        "minX": 80,
+        "maxX": 944,
+        "minY": 80,
+        "maxY": 944
+      }
+    },
+    "861": {
+      "zoneName": "Heritage Found",
+      "zoneAliases": [
+        "헤리티지 파운드"
+      ],
+      "imagePath": "../maps/official/heritage-found.png",
+      "imageBounds": {
+        "x": 80,
+        "y": 80,
+        "width": 864,
+        "height": 864
+      },
+      "worldAxes": {
+        "horizontal": "x",
+        "vertical": "y"
+      },
+      "formula": {
+        "offsetX": 0,
+        "offsetY": 0,
+        "sizeFactor": 100
+      },
+      "mapRange": {
+        "minX": 1,
+        "maxX": 41,
+        "minY": 1,
+        "maxY": 41
+      },
+      "pixelBounds": {
+        "minX": 80,
+        "maxX": 944,
+        "minY": 80,
+        "maxY": 944
+      }
+    },
+    "862": {
+      "zoneName": "Living Memory",
+      "zoneAliases": [
+        "리빙 메모리",
+        "리빙메모리"
+      ],
+      "imagePath": "../maps/official/living-memory.png",
+      "imageBounds": {
+        "x": 80,
+        "y": 80,
+        "width": 864,
+        "height": 864
+      },
+      "worldAxes": {
+        "horizontal": "x",
+        "vertical": "y"
+      },
+      "calibration": {
+        "worldMinX": -645.8534,
+        "worldMaxX": 666.8361,
+        "worldMinY": 715.193054,
+        "worldMaxY": -728.763062,
+        "mapMinX": 8.5,
+        "mapMaxX": 34.8,
+        "mapMinY": 35.7,
+        "mapMaxY": 6.9,
+        "pixelMinX": 225,
+        "pixelMaxX": 792,
+        "pixelMinY": 810,
+        "pixelMaxY": 211
+      }
+    },
+    "sample-map-id": {
+      "zoneName": "Sample Zone",
+      "imagePath": "../maps/sample-grid.svg",
+      "worldAxes": {
+        "horizontal": "x",
+        "vertical": "z"
+      },
+      "calibration": {
+        "worldMinX": -500,
+        "worldMaxX": 500,
+        "worldMinZ": -500,
+        "worldMaxZ": 500,
+        "mapMinX": 1,
+        "mapMaxX": 41,
+        "mapMinY": 1,
+        "mapMaxY": 41,
+        "pixelMinX": 80,
+        "pixelMaxX": 944,
+        "pixelMinY": 80,
+        "pixelMaxY": 944
+      }
+    }
+  }
+}

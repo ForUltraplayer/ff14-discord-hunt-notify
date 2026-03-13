@@ -1,0 +1,49 @@
+[
+  {
+    "key": "example-a-rank",
+    "name": "Example A Hunt",
+    "rank": "A",
+    "bnpcNameIds": [
+      100001
+    ],
+    "bnpcIds": [
+      200001
+    ],
+    "aliases": [
+      "Example A"
+    ],
+    "defaultMapId": "sample-map-id"
+  },
+  {
+    "key": "example-s-rank",
+    "name": "Example S Hunt",
+    "rank": "S",
+    "bnpcNameIds": [
+      100002
+    ],
+    "bnpcIds": [
+      200002
+    ],
+    "aliases": [
+      "Example S"
+    ],
+    "defaultMapId": "sample-map-id"
+  },
+  {
+    "key": "example-test-target",
+    "name": "Example Test Target",
+    "category": "test",
+    "rank": null,
+    "alertLabel": "테스트 감지",
+    "bnpcNameIds": [
+      100099
+    ],
+    "bnpcIds": [
+      200099
+    ],
+    "aliases": [
+      "Example Test"
+    ],
+    "defaultMapId": "sample-map-id"
+  }
+]

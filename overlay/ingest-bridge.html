@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FFXIV Hunt Ingest Bridge</title>
+    <link rel="stylesheet" href="./ingest-bridge.css" />
+    <script src="./bridge-config.js"></script>
+    <script src="https://overlayplugin.github.io/OverlayPlugin/assets/shared/common.min.js"></script>
+    <script defer src="./ingest-bridge.js"></script>
+  </head>
+  <body>
+    <main class="panel">
+      <header class="header">
+        <div class="eyebrow">OverlayPlugin Bridge</div>
+        <div class="title">Hunt Ingest Relay</div>
+        <div class="subtitle">Filtered log lines from ACT to local `/ingest`</div>
+      </header>
+
+      <section class="grid">
+        <article class="card">
+          <div class="label">Player</div>
+          <div class="value" id="player-value">unknown</div>
+        </article>
+        <article class="card">
+          <div class="label">Zone</div>
+          <div class="value" id="zone-value">unknown</div>
+        </article>
+        <article class="card">
+          <div class="label">Endpoint</div>
+          <div class="value mono" id="endpoint-value">http://127.0.0.1:5059/ingest</div>
+        </article>
+        <article class="card">
+          <div class="label">Filters</div>
+          <div class="value mono" id="filter-value">03, 04, 25, 40, 261</div>
+        </article>
+        <article class="card">
+          <div class="label">Queue</div>
+          <div class="value mono" id="queue-value">0 queued / 0 sent</div>
+        </article>
+        <article class="card">
+          <div class="label">Last Code</div>
+          <div class="value mono" id="last-value">-</div>
+        </article>
+      </section>
+
+      <footer class="footer">
+        <div class="status-bar">
+          <div class="status-line">
+            <span class="status-dot"></span>
+            <span id="status-label">Booting bridge</span>
+          </div>
+          <div class="detail" id="status-detail"></div>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>

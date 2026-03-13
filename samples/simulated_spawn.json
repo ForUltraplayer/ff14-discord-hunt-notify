@@ -1,0 +1,18 @@
+{
+  "type": "hunt-spawn",
+  "hunt": {
+    "key": "example-a-rank",
+    "name": "Example A Hunt",
+    "rank": "A"
+  },
+  "mapId": "sample-map-id",
+  "zoneName": "Sample Zone",
+  "placeName": "Sample Plateau",
+  "entityId": "40000001",
+  "world": {
+    "x": 120.5,
+    "y": 14.25,
+    "z": -220.75
+  },
+  "detectedBy": "SampleScout"
+}

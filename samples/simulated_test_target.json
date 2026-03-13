@@ -1,0 +1,17 @@
+{
+  "type": "tracked-spawn",
+  "target": {
+    "key": "example-test-target",
+    "name": "Example Test Target"
+  },
+  "mapId": "sample-map-id",
+  "zoneName": "Sample Zone",
+  "placeName": "Training Grounds",
+  "entityId": "50000001",
+  "world": {
+    "x": -180.2,
+    "y": 5.4,
+    "z": 88.9
+  },
+  "detectedBy": "무냥"
+}
