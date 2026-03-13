@@ -9,11 +9,11 @@ $listener = netstat -ano |
 
 if ($listener) {
   $parts = ($listener.ToString() -split '\s+') | Where-Object { $_ }
-  $pid = $parts[-1]
+  $processId = $parts[-1]
 
-  if ($pid -and $pid -match '^\d+$') {
-    Write-Host "Stopping existing process on port $port (PID $pid)..."
-    Stop-Process -Id ([int]$pid) -Force
+  if ($processId -and $processId -match '^\d+$') {
+    Write-Host "Stopping existing process on port $port (PID $processId)..."
+    Stop-Process -Id ([int]$processId) -Force
     Start-Sleep -Milliseconds 500
   }
 }
