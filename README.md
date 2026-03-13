@@ -1,121 +1,123 @@
-# FFXIV Hunt Notifier Prototype
+# FFXIV 마물 디스코드 알림기
 
-Minimal prototype for:
+ACT + OverlayPlugin 로그를 받아서 A/S급 마물 발견 시:
 
-- detecting A/S hunt sightings
-- testing with arbitrary tracked targets before live hunt validation
-- separating A/S records
-- storing raw world coordinates and player-facing map coordinates
-- rendering a pin image
-- sending a Discord webhook
+- 디스코드 웹훅 전송
+- 지역명 / 좌표 표시
+- 지도 배경 위 핀 이미지 생성
 
-This prototype is intentionally dependency-free and runs on the Node.js built-ins that are already available on this machine.
+까지 처리하는 로컬 실행형 도구입니다.
 
-## What This Prototype Does
+현재 구조는 다음 흐름으로 동작합니다.
 
-The service accepts either:
+1. OverlayPlugin 커스텀 오버레이가 게임 로그를 수집
+2. 로컬 Node 서버가 `03 / 04 / 25 / 40 / 261` 로그를 파싱
+3. 마물 테이블과 대조해 A/S급 여부를 판별
+4. 월드 좌표를 인게임 맵 좌표로 변환
+5. 디스코드 웹훅으로 텍스트 + 지도 핀 이미지를 전송
 
-- raw ACT/OverlayPlugin log lines via `POST /ingest`
-- already-normalized spawn events via `POST /simulate/spawn`
+## 주요 기능
 
-When a hunt match is found, it:
+- A급 / S급 BNpcNameID 화이트리스트 기반 감지
+- 일반 몹 / NPC를 이용한 테스트 모드
+- 디스코드 웹훅 알림
+- 지역명 / 맵 좌표 / 월드 좌표 기록
+- Dawntrail 6개 지역 공식 지도 배경 합성
+- 로컬 디버그 엔드포인트 제공
 
-1. resolves the hunt rank and metadata from a hunt table
-2. converts world coordinates into map coordinates with a per-map calibration
-3. appends a JSONL record to disk
-4. renders a map-pin PNG
-5. writes the PNG to disk for local inspection
-6. sends the record to a Discord webhook
+## 지원 지도
 
-## Why World And Map Coordinates Are Both Stored
+- 오르코 파차
+- 코자말루 카
+- 야크텔 밀림
+- 샬로니 황야
+- 헤리티지 파운드
+- 리빙 메모리
 
-- `worldX/worldY/worldZ`: raw game position for machine processing and dedupe
-- `mapX/mapY`: player-facing coordinates for Discord text and map pin placement
+## 폴더 구조
 
-## Files
+- `src/server.mjs`: HTTP 서버 엔트리
+- `src/lib/parser.mjs`: ACT 로그 파서
+- `src/lib/hunts.mjs`: 마물 매칭 로직
+- `src/lib/projector.mjs`: 월드 좌표 -> 맵 좌표 / 픽셀 좌표 변환
+- `src/lib/png-renderer.mjs`: 지도 이미지 렌더링
+- `src/lib/discord.mjs`: 디스코드 웹훅 전송
+- `overlay/ingest-bridge.html`: OverlayPlugin에서 불러올 커스텀 오버레이
+- `config/local.config.example.json`: 실사용 설정 템플릿
+- `config/hunts.as-whitelist.json`: A/S급 BNpcNameID 화이트리스트
+- `config/tracked-targets.outrunner.json`: 일반 몹 테스트용 예시
 
-- `src/server.mjs`: HTTP entrypoint
-- `src/lib/parser.mjs`: raw log parsing helpers
-- `src/lib/projector.mjs`: world-to-map and world-to-pixel conversion
-- `src/lib/png-renderer.mjs`: PNG pin image generation
-- `src/lib/discord.mjs`: Discord webhook delivery
-- `src/lib/store.mjs`: JSONL record storage
-- `config/example.config.json`: example runtime config
-- `config/local.config.example.json`: GitHub-safe local runtime template for real ACT usage
-- `config/hunts.sample.json`: sample hunt table
-- `config/hunts.as-whitelist.json`: A/S BNpcNameID whitelist for live hunt detection
-- `config/tracked-targets.outrunner.json`: real-log-based tracked target file for Outrunner
-- `maps/sample-grid.svg`: sample background image
-- `maps/official/*.png`: downloaded official Dawntrail zone maps for background pin rendering
-- `overlay/ingest-bridge.html`: OverlayPlugin custom overlay that forwards live log lines to the local server
-- `samples/simulated_spawn.json`: sample event for local verification
-- `samples/simulated_test_target.json`: sample non-hunt target event for local verification
-- `samples/ingest-outrunner-remove.json`: raw-log ingest sample based on the provided Outrunner log
+## 시작하기
 
-## Run
+### 1. 로컬 설정 파일 만들기
 
-Before using the local ACT bridge scripts, copy:
+먼저 템플릿을 복사합니다.
 
 ```powershell
 Copy-Item config/local.config.example.json config/local.config.json
 ```
 
-Then edit `config/local.config.json` and fill in:
+그 다음 `config/local.config.json` 에서 아래 값을 채웁니다.
 
-- `identity.detectedBy`
-- `discord.webhookUrl`
+- `identity.detectedBy`: 디코에 표시할 감지자 이름
+- `discord.webhookUrl`: 디스코드 웹훅 주소
 
-```powershell
-node src/server.mjs --config config/example.config.json --hunts config/hunts.sample.json
-```
+## 2. 라이브 서버 실행
 
-For the local Discord test setup used in this workspace:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/restart-local-server.ps1
-```
-
-Start the live A/S whitelist setup:
+A/S급 화이트리스트 감지 모드:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/restart-live-server.ps1
 ```
 
-Health check:
+일반 테스트 대상 모드:
 
 ```powershell
-Invoke-WebRequest http://127.0.0.1:5055/health | Select-Object -Expand Content
+powershell -ExecutionPolicy Bypass -File scripts/restart-local-server.ps1
 ```
 
-Local debug state:
+## 3. ACT / OverlayPlugin에 브리지 오버레이 등록
+
+ACT에서:
+
+1. `Plugins -> OverlayPlugin.dll -> New`
+2. `Custom` 타입 선택
+3. URL에 아래 경로 입력
+
+```text
+file:///C:/Users/Administrator/Desktop/ffxiv_mamul_codex/overlay/ingest-bridge.html
+```
+
+정상 연결되면 브리지 오버레이에서 연결 상태를 확인할 수 있습니다.
+
+## 디스코드 알림 형식
+
+예시:
+
+```text
+[A급 발견] 마물명
+지역: 리빙 메모리
+좌표: X 12.4 / Y 13.6
+감지: 무냥
+```
+
+추가로:
+
+- 지도 배경 이미지
+- 핀 표시
+- 월드 좌표
+
+가 함께 첨부됩니다.
+
+## 테스트 방법
+
+### 1. 시뮬레이션 이벤트 테스트
+
+샘플 스폰 이벤트:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/debug-local-state.ps1
+node src/server.mjs --config config/example.config.json --hunts config/hunts.sample.json
 ```
-
-Download the official Dawntrail zone backgrounds:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/download-official-dawntrail-maps.ps1
-```
-
-Build a map calibration snippet from two known points:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/calibrate-map.ps1 `
-  -MapId 862 `
-  -ZoneName "Living Memory" `
-  -WorldX1 -324.95 `
-  -WorldZ1 36.56 `
-  -MapX1 22.0 `
-  -MapY1 37.5 `
-  -WorldX2 -450.19 `
-  -WorldZ2 34.91 `
-  -MapX2 14.6 `
-  -MapY2 35.9
-```
-
-Simulate a hunt spawn:
 
 ```powershell
 Invoke-WebRequest http://127.0.0.1:5055/simulate/spawn `
@@ -124,104 +126,91 @@ Invoke-WebRequest http://127.0.0.1:5055/simulate/spawn `
   -InFile samples/simulated_spawn.json
 ```
 
-Simulate a non-hunt test target:
+### 2. 일반 몹 테스트
+
+예시 테스트 대상:
+
+- 아웃러너
+- 네크로시스
+
+관련 설정 파일:
+
+- `config/tracked-targets.outrunner.json`
+
+## 디버그 명령
+
+상태 확인:
 
 ```powershell
-Invoke-WebRequest http://127.0.0.1:5055/simulate/spawn `
-  -Method POST `
-  -ContentType 'application/json' `
-  -InFile samples/simulated_test_target.json
+powershell -ExecutionPolicy Bypass -File scripts/debug-local-state.ps1
 ```
 
-Test with the real Outrunner log sample:
+플레이어 좌표 확인:
 
 ```powershell
-node src/server.mjs --config config/local.config.json --hunts config/tracked-targets.outrunner.json
+powershell -ExecutionPolicy Bypass -File scripts/debug-player.ps1
 ```
+
+헬스 체크:
 
 ```powershell
-Invoke-WebRequest http://127.0.0.1:5059/ingest `
-  -Method POST `
-  -ContentType 'application/json' `
-  -InFile samples/ingest-outrunner-remove.json
+Invoke-WebRequest http://127.0.0.1:5059/health | Select-Object -Expand Content
 ```
 
-## Config Notes
+## 지도 자산
 
-The prototype is wired around calibration instead of hardcoding FFXIV-specific map formulas.
+Dawntrail 공식 지도 배경은 아래 스크립트로 받을 수 있습니다.
 
-Each map entry defines:
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/download-official-dawntrail-maps.ps1
+```
 
-- raw world-space bounds
-- display map coordinate bounds
-- pixel bounds for pin placement inside the map image
+저장 위치:
 
-That makes the prototype usable immediately, and later you can swap the calibration layer for exact map metadata from game data if you want.
+- `maps/official`
 
-Relative paths in the example config are resolved from the `config/` folder, not the workspace root.
+## 설정 개요
 
-If `imagePath` is configured for a map, the renderer composites the pin onto the real zone background image.
-If no local background asset is available, it falls back to the tactical grid preview.
+`config/local.config.example.json` 기준으로:
 
-## Testing With Another Target
+- `server`: 로컬 서버 주소 / 포트
+- `identity`: 감지자 이름, 인스턴스 표시값
+- `discord`: 웹훅 설정
+- `storage`: 기록 파일 / 이미지 출력 폴더 / 중복 제한 시간
+- `parser`: ACT 로그 필드 인덱스
+- `maps`: 지도별 좌표 변환 설정
 
-You do not need a real hunt for end-to-end validation.
+## 마물 감지 방식
 
-Add a normal tracked entry to `config/hunts.sample.json` or your local copy with:
+`config/hunts.as-whitelist.json` 에는:
 
-- `category: "test"`
-- `rank: null`
-- `alertLabel: "테스트 감지"`
-- either `name`, `aliases`, `bnpcNameIds`, or `bnpcIds`
+- A급 BNpcNameID 화이트리스트
+- S급 BNpcNameID 화이트리스트
 
-That lets you test the same Discord + image pipeline against any ordinary mob or NPC that is easy to find in game.
+가 들어 있습니다.
 
-If you already have a real log sample, it is cleaner to keep those temporary targets in a separate file such as `config/tracked-targets.outrunner.json` and launch with `--hunts`.
+실제 디스코드에 표시되는 몹 이름은 고정 테이블명이 아니라, **실시간 로그의 `name` 값**을 사용합니다.  
+즉 마물별 이름 사전이 없어도 실사용 가능한 알림을 만들 수 있습니다.
 
-## Live A/S Whitelist Mode
+## 참고 사항
 
-`config/hunts.as-whitelist.json` uses two generic hunt entries:
+- 이 프로젝트는 로컬에서 실행되는 구조입니다.
+- 중앙 서버형 서비스보다, ACT / OverlayPlugin 옆에서 같이 돌리는 도구에 가깝습니다.
+- `config/local.config.json`, `data/` 등 로컬 민감 정보와 산출물은 git에서 제외되어 있습니다.
 
-- one `A` rank whitelist
-- one `S` rank whitelist
+## 현재 상태
 
-When a matching BNpcNameID is seen, the alert rank comes from the whitelist and the displayed mob name comes from the live log line itself.
-That means you do not need a per-mob name table just to get useful Discord alerts.
+현재는 다음이 동작합니다.
 
-## Raw Log Parsing Notes
+- OverlayPlugin 브리지 수집
+- A/S급 BNpcNameID 감지
+- 일반 몹 테스트
+- 리빙 메모리 / 야크텔 밀림 좌표 검증
+- 실제 지도 배경 핀 렌더링
+- 디스코드 웹훅 전송
 
-The parser is built so that the line code (`03`, `04`, `40`, `261`) is found first, then all configured indexes are applied relative to that code field.
-`261` is parsed dynamically from key/value pairs such as `PosX|...|PosY|...|PosZ|...`, based on the real sample log format.
-`03`, `04`, `25`, and `40` are currently mapped for the raw ACT line shape seen in testing, with `40` supplying the runtime `mapId`.
+추가로 다듬을 수 있는 부분:
 
-## OverlayPlugin Integration
-
-The cleanest live integration is:
-
-1. a lightweight OverlayPlugin custom overlay listens for `LogLine`
-2. it forwards the raw lines to `POST /ingest`
-3. this Node service handles matching, storage, rendering, and Discord delivery
-
-That keeps the Discord webhook and image generation out of the overlay runtime.
-
-### Local Bridge Overlay
-
-This workspace now includes a ready-to-load custom overlay:
-
-- `C:\Users\Administrator\Desktop\ffxiv_mamul_codex\overlay\ingest-bridge.html`
-
-To use it in ACT / OverlayPlugin:
-
-1. Start the Node service first.
-2. In ACT, go to `Plugins -> OverlayPlugin.dll -> New`.
-3. Choose `Custom` and use a `MiniParse`-type overlay.
-4. Set the URL to:
-   `file:///C:/Users/Administrator/Desktop/ffxiv_mamul_codex/overlay/ingest-bridge.html`
-5. Keep the bridge overlay small on screen while testing, or move it aside after it shows `Bridge armed`.
-
-The bridge listens for the official OverlayPlugin `LogLine`, `ChangePrimaryPlayer`, and `ChangeZone` events through `common.min.js`, then batches line codes `03`, `04`, `25`, `40`, and `261` to the local ingest server.
-
-The endpoint and line-code filter live in `overlay/bridge-config.js`.
-
-If map coordinates show as unavailable, check `http://127.0.0.1:5059/debug/state` first.
-That route shows the last seen `mapId`, current zone, and whether that map currently has a calibration entry in `config/local.config.json`.
+- 지역별 핀 위치 미세보정
+- `blockHunts`, `insHunts` 처리
+- 더 쉬운 배포용 런처 / exe 패키징
