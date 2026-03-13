@@ -1,12 +1,148 @@
 # FFXIV 황금 마물 디스코드 알림기
 
-ACT + OverlayPlugin 로그를 받아서 A/S급 마물 발견 시:
+황금 지역 A/S급 마물을 발견했을 때:
 
-- 디스코드 웹훅 전송
-- 지역명 / 좌표 표시
-- 지도 배경 위 핀 이미지 생성
+- 디스코드 웹훅으로 알림 보내기
+- 지역 / 좌표 표시하기
+- 지도 이미지에 핀 찍어서 같이 보내기
 
-까지 처리하는 로컬 실행형 도구입니다.
+를 해주는 로컬 실행형 프로그램입니다.
+
+이 프로그램은 **사용자 PC에서 직접 실행**하는 방식입니다.  
+릴리스 zip 안에는 실행 파일과 필요한 런타임이 같이 들어 있으므로, **Node.js를 따로 설치할 필요는 없습니다.**
+
+## 1. JSON 설정 후 BAT으로 실행하는 방법
+
+가장 쉬운 사용 방법입니다.
+
+### 1-1. 파일 준비
+
+릴리스 zip을 풀면 대략 이런 파일이 있습니다.
+
+- `ff14-discord-hunt-notify.exe`
+- `start-live.bat`
+- `start-test.bat`
+- `config/`
+- `overlay/`
+
+### 1-2. 설정 파일 만들기
+
+먼저 `config/local.config.example.json` 을 복사해서  
+`config/local.config.json` 파일을 만듭니다.
+
+예시:
+
+```json
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 5059
+  },
+  "identity": {
+    "detectedBy": "무냥@초코보",
+    "instanceLabel": ""
+  },
+  "discord": {
+    "webhookUrl": "https://discord.com/api/webhooks/여기에_본인_웹훅"
+  },
+  "storage": {
+    "recordsPath": "../data/records.jsonl",
+    "imageOutputDir": "../data/images",
+    "dedupeMinutes": 5
+  }
+}
+```
+
+여기서 꼭 바꿔야 하는 값:
+
+- `identity.detectedBy`
+  - 디스코드에 `감지:` 로 표시될 이름
+  - 예: `무냥@초코보`
+- `discord.webhookUrl`
+  - 본인 디스코드 웹훅 주소
+
+### 1-3. 실행
+
+실제 마물 감지용:
+
+```text
+start-live.bat
+```
+
+테스트 몹 감지용:
+
+```text
+start-test.bat
+```
+
+BAT을 실행하면 내부적으로 프로그램이 켜집니다.
+
+## 2. BAT 말고 ACT에 등록해서 실행하는 방법
+
+BAT을 눌러서 켜기 싫다면, 실행 파일은 직접 켜고 ACT에는 브리지 오버레이만 등록해서 사용할 수 있습니다.
+
+### 2-1. 프로그램 직접 실행
+
+```text
+ff14-discord-hunt-notify.exe
+```
+
+테스트 모드로 실행하고 싶으면:
+
+```text
+ff14-discord-hunt-notify.exe --test
+```
+
+### 2-2. ACT에 브리지 등록
+
+ACT에서:
+
+1. `Plugins -> OverlayPlugin.dll -> New`
+2. `Custom` 타입 선택
+3. URL에 아래 경로 입력
+
+```text
+file:///C:/경로/ff14-discord-hunt-notify/overlay/ingest-bridge.html
+```
+
+예시:
+
+```text
+file:///C:/Users/Administrator/Desktop/ffxiv_mamul_codex/overlay/ingest-bridge.html
+```
+
+정상 연결되면 브리지 오버레이가 연결 상태를 보여줍니다.
+
+## 디스코드에 오는 알림 예시
+
+```text
+[A급 발견] 네추키호
+지역: 야크텔 밀림
+좌표: X 12.4 / Y 13.6
+감지: 무냥@초코보
+```
+
+추가로 지도 이미지와 핀도 함께 첨부됩니다.
+
+## 꼭 알아둘 점
+
+- 이 프로그램은 **ACT 로그를 받아서** 동작합니다.
+- 그래서 **ACT + OverlayPlugin 등록**은 꼭 필요합니다.
+- `BAT`은 프로그램을 쉽게 켜는 용도이고,
+- `ACT 오버레이 등록`은 게임 로그를 이 프로그램으로 넘기는 용도입니다.
+
+즉 실제 사용에는 보통 아래 두 가지가 모두 필요합니다.
+
+1. 프로그램 실행
+2. ACT 오버레이 등록
+
+---
+
+## 개발자용
+
+아래부터는 구조 설명, 테스트, 빌드, 개발 메모입니다.
+
+## 프로젝트 개요
 
 현재 구조는 다음 흐름으로 동작합니다.
 
@@ -47,87 +183,9 @@ ACT + OverlayPlugin 로그를 받아서 A/S급 마물 발견 시:
 - `config/hunts.as-whitelist.json`: A/S급 BNpcNameID 화이트리스트
 - `config/tracked-targets.outrunner.json`: 일반 몹 테스트용 예시
 
-## 시작하기
-
-### 1. 로컬 설정 파일 만들기
-
-먼저 템플릿을 복사합니다.
-
-```powershell
-Copy-Item config/local.config.example.json config/local.config.json
-```
-
-그 다음 `config/local.config.json` 에서 아래 값을 채웁니다.
-
-- `identity.detectedBy`: 디코에 표시할 감지자 이름
-- `discord.webhookUrl`: 디스코드 웹훅 주소
-
-## 2. 라이브 서버 실행
-
-A/S급 화이트리스트 감지 모드:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/restart-live-server.ps1
-```
-
-일반 테스트 대상 모드:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/restart-local-server.ps1
-```
-
-배포용 exe를 사용하는 경우에는:
-
-```text
-start-live.bat
-```
-
-또는
-
-```text
-start-test.bat
-```
-
-만 실행하면 됩니다.
-
-## 3. ACT / OverlayPlugin에 브리지 오버레이 등록
-
-ACT에서:
-
-1. `Plugins -> OverlayPlugin.dll -> New`
-2. `Custom` 타입 선택
-3. URL에 아래 경로 입력
-
-```text
-file:///C:/Users/Administrator/Desktop/ffxiv_mamul_codex/overlay/ingest-bridge.html
-```
-
-정상 연결되면 브리지 오버레이에서 연결 상태를 확인할 수 있습니다.
-
-## 디스코드 알림 형식
-
-예시:
-
-```text
-[A급 발견] 마물명
-지역: 리빙 메모리
-좌표: X 12.4 / Y 13.6
-감지: 무냥
-```
-
-추가로:
-
-- 지도 배경 이미지
-- 핀 표시
-- 월드 좌표
-
-가 함께 첨부됩니다.
-
 ## 테스트 방법
 
-### 1. 시뮬레이션 이벤트 테스트
-
-샘플 스폰 이벤트:
+### 시뮬레이션 이벤트 테스트
 
 ```powershell
 node src/server.mjs --config config/example.config.json --hunts config/hunts.sample.json
@@ -140,7 +198,7 @@ Invoke-WebRequest http://127.0.0.1:5055/simulate/spawn `
   -InFile samples/simulated_spawn.json
 ```
 
-### 2. 일반 몹 테스트
+### 일반 몹 테스트
 
 예시 테스트 대상:
 
