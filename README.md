@@ -131,6 +131,30 @@ Hunt notifier listening on http://127.0.0.1:5059
 4. URL에 `overlay/ingest-bridge.html` 등록
 5. `오버레이 표시`, `오버레이 켜기` 체크
 
+스크린샷 예시:
+
+`Plugins -> OverlayPlugin.dll -> 추가`
+
+![ACT에서 OverlayPlugin.dll 선택 후 추가 버튼](./docs/act-overlay-add-button.png)
+
+`커스텀 / MiniParse` 선택 후 확인
+
+![오버레이 생성 창](./docs/act-overlay-create-dialog.png)
+
+URL 오른쪽 `...` 버튼으로 `overlay/ingest-bridge.html` 선택
+
+![URL 파일 선택 버튼](./docs/act-overlay-url-browse-button.png)
+
+![ingest-bridge.html 선택](./docs/act-overlay-select-ingest-bridge-html.png)
+
+`오버레이 표시`, `오버레이 켜기` 체크
+
+![오버레이 표시와 오버레이 켜기 체크](./docs/act-overlay-enable-visible.png)
+
+정상 연결 화면 예시
+
+![브리지 연결 예시](./docs/act-overlay-bridge-armed-example.png)
+
 URL 경로 예시:
 
 ```text
