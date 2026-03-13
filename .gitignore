@@ -1,6 +1,8 @@
 config/local.config.json
 config/data/
 data/
+build/
+release/
 *.log
 Thumbs.db
 .DS_Store
