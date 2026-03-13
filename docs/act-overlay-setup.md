@@ -16,6 +16,13 @@ ACT + OverlayPlugin 브리지 등록 절차를 따로 정리한 문서입니다.
 
 ## 1. 프로그램 실행
 
+먼저 `config/local.config.example.json` 을 복사해서  
+`config/local.config.json` 파일을 만듭니다.
+
+예시:
+
+![local.config.json 예시](./configjsonexample.png)
+
 ```text
 start-live.bat
 ```
@@ -38,6 +45,8 @@ ACT에서:
 2. `OverlayPlugin.dll` 선택
 3. 왼쪽 아래 `추가` 버튼 클릭
 
+![OverlayPlugin.dll 에서 추가 버튼 클릭](./addoverlay.png)
+
 새 오버레이 생성 창에서:
 
 - 이름: `Hunt_Discord`
@@ -45,6 +54,8 @@ ACT에서:
 - 유형: `MiniParse`
 
 그 다음 `확인`을 누릅니다.
+
+![커스텀 / MiniParse 선택](./createoverlay.png)
 
 ## 3. 브리지 HTML 선택
 
@@ -56,6 +67,10 @@ ACT에서:
 ```text
 overlay/ingest-bridge.html
 ```
+
+![URL 오른쪽 버튼으로 파일 선택](./howtosetoverlay.png)
+
+![ingest-bridge.html 선택](./howtosetoverlay2.png)
 
 예시 경로:
 
@@ -69,6 +84,8 @@ file:///C:/Users/Administrator/Downloads/ff14-discord-hunt-notify-win-x64-v0.1.0
 
 - `오버레이 표시`
 - `오버레이 켜기`
+
+![오버레이 표시 / 오버레이 켜기 체크](./offoverlay.png)
 
 ## 5. 정상 연결 확인
 
@@ -85,6 +102,8 @@ Waiting for filtered log lines
 - `ZONE`
 - `ENDPOINT`
 - `FILTERS`
+
+![브리지 연결 화면 예시](./overlayexample.png)
 
 ## 안 될 때
 
@@ -108,14 +127,3 @@ Waiting for filtered log lines
 http://127.0.0.1:5059/health
 http://127.0.0.1:5059/debug/recent
 ```
-
-## 스크린샷 자리
-
-이 문서에는 아래 단계별 스크린샷을 붙일 수 있습니다.
-
-1. `Plugins -> OverlayPlugin.dll -> 추가`
-2. `커스텀 / MiniParse / 확인`
-3. URL 오른쪽 `...` 버튼
-4. `overlay/ingest-bridge.html` 선택
-5. 브리지 오버레이 연결 화면
-6. `오버레이 표시`, `오버레이 켜기` 체크

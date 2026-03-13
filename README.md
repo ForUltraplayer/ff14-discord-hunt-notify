@@ -1,5 +1,11 @@
 # FFXIV 황금 마물 디스코드 알림기
 
+주의:
+
+- 이 프로젝트는 아직 **충분한 검증이 끝나지 않은 프로토타입**입니다.
+- 일부 지역, 일부 감지 상황, 일부 좌표/지도 보정은 완전하지 않을 수 있습니다.
+- 실사용 전 반드시 직접 테스트해 주세요.
+
 황금 지역 A/S급 마물을 발견했을 때:
 
 - 디스코드 웹훅으로 알림 보내기
@@ -9,7 +15,7 @@
 를 해주는 로컬 실행형 프로그램입니다.
 
 이 프로그램은 **사용자 PC에서 직접 실행**하는 방식입니다.  
-릴리스 zip 안에는 실행 파일과 필요한 런타임이 같이 들어 있으므로, **Node.js를 따로 설치할 필요는 없습니다.**
+릴리스 zip 안에는 필요한 실행 파일과 런타임이 같이 들어 있으므로, **Node.js를 따로 설치할 필요는 없습니다.**
 
 중요:
 
@@ -21,7 +27,7 @@
 
 ACT 등록 절차만 따로 보고 싶으면:
 
-- `docs/act-overlay-setup.md`
+- [ACT 오버레이 등록 방법](./docs/act-overlay-setup.md)
 
 ## 1. JSON 설정 후 BAT으로 실행하는 방법
 
@@ -31,11 +37,12 @@ ACT 등록 절차만 따로 보고 싶으면:
 
 릴리스 zip을 풀면 대략 이런 파일이 있습니다.
 
-- `ff14-discord-hunt-notify.exe`
 - `start-live.bat`
 - `start-test.bat`
 - `config/`
 - `overlay/`
+
+일반 사용자는 보통 `start-live.bat` 만 사용하면 됩니다.
 
 ### 1-2. 설정 파일 만들기
 
@@ -110,52 +117,24 @@ Hunt notifier listening on http://127.0.0.1:5059
 
 입니다.
 
-### 2-1. 프로그램 직접 실행
+### 2-1. ACT에 브리지 등록
+
+스크린샷 포함 상세 설명은 아래 문서를 보시면 됩니다.
+
+- [ACT 오버레이 등록 방법](./docs/act-overlay-setup.md)
+
+핵심만 요약하면:
+
+1. `Plugins -> OverlayPlugin.dll -> 추가`
+2. 이름은 예를 들어 `Hunt_Discord`
+3. 프리셋 `커스텀`, 유형 `MiniParse`
+4. URL에 `overlay/ingest-bridge.html` 등록
+5. `오버레이 표시`, `오버레이 켜기` 체크
+
+URL 경로 예시:
 
 ```text
-ff14-discord-hunt-notify.exe
-```
-
-테스트 모드로 실행하고 싶으면:
-
-```text
-ff14-discord-hunt-notify.exe --test
-```
-
-직접 exe를 실행하는 방식도 가능하지만, 일반 사용자 기준으로는 보통 `start-live.bat` 실행만 하면 충분합니다.
-
-### 2-2. ACT에 브리지 등록
-
-올려주신 스크린샷 순서대로 하면 됩니다.
-
-ACT에서:
-
-1. `Plugins` 탭으로 이동
-2. `OverlayPlugin.dll` 선택
-3. 왼쪽 아래 `추가` 버튼 클릭
-4. 이름은 예를 들어 `Hunt_Discord`
-5. 프리셋은 `커스텀`
-6. 유형은 `MiniParse`
-7. `확인` 클릭
-8. 생성된 오버레이를 선택한 뒤 URL 오른쪽의 `...` 버튼 클릭
-9. 릴리스 폴더 안의 아래 파일 선택
-
-```text
-overlay/ingest-bridge.html
-```
-
-10. `오버레이 표시`, `오버레이 켜기` 체크
-
-입력해야 하는 URL 경로 예시:
-
-```text
-file:///C:/경로/ff14-discord-hunt-notify/overlay/ingest-bridge.html
-```
-
-예시:
-
-```text
-file:///C:/Users/Administrator/Desktop/ffxiv_mamul_codex/overlay/ingest-bridge.html
+file:///C:/Users/Administrator/Downloads/ff14-discord-hunt-notify-win-x64-v0.1.0/overlay/ingest-bridge.html
 ```
 
 정상 연결되면 브리지 오버레이에 아래와 비슷하게 표시됩니다.
@@ -164,14 +143,6 @@ file:///C:/Users/Administrator/Desktop/ffxiv_mamul_codex/overlay/ingest-bridge.h
 Bridge armed
 Waiting for filtered log lines
 ```
-
-또는
-
-```text
-PLAYER / ZONE / ENDPOINT
-```
-
-형태의 정보가 보입니다.
 
 ## 디스코드에 오는 알림 예시
 
@@ -368,7 +339,7 @@ powershell -ExecutionPolicy Bypass -File scripts/build-release.ps1 -Version 0.1.
 
 릴리스 zip 안에는 다음이 포함됩니다.
 
-- `ff14-discord-hunt-notify.exe`: 실제 실행 런처
+- `ff14-discord-hunt-notify.exe`: 내부 실행 런처
 - `runtime/node.exe`: 번들된 Node 런타임
 - `config/`, `maps/`, `overlay/`, `scripts/`: 실행에 필요한 파일
 
