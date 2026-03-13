@@ -11,6 +11,14 @@
 이 프로그램은 **사용자 PC에서 직접 실행**하는 방식입니다.  
 릴리스 zip 안에는 실행 파일과 필요한 런타임이 같이 들어 있으므로, **Node.js를 따로 설치할 필요는 없습니다.**
 
+중요:
+
+- `start-live.bat`만 실행해서는 알림이 오지 않습니다.
+- **프로그램 실행 + ACT 오버레이 등록**을 둘 다 해야 실제 마물 알림이 옵니다.
+- 이유:
+  - 프로그램 실행 = 디스코드 전송 서버 켜기
+  - ACT 오버레이 등록 = 게임 로그를 서버로 보내기
+
 ## 1. JSON 설정 후 BAT으로 실행하는 방법
 
 가장 쉬운 사용 방법입니다.
@@ -77,9 +85,26 @@ start-test.bat
 
 BAT을 실행하면 내부적으로 프로그램이 켜집니다.
 
-## 2. BAT 말고 ACT에 등록해서 실행하는 방법
+정상 실행되면 콘솔에 아래와 비슷하게 뜹니다.
 
-BAT을 눌러서 켜기 싫다면, 실행 파일은 직접 켜고 ACT에는 브리지 오버레이만 등록해서 사용할 수 있습니다.
+```text
+Starting live hunt notifier on port 5059...
+Hunt notifier listening on http://127.0.0.1:5059
+```
+
+하지만 여기까지만 해서는 아직 알림이 오지 않습니다.  
+아래 ACT 오버레이 등록까지 해야 합니다.
+
+## 2. ACT에 등록해서 실제로 작동시키는 방법
+
+이 단계가 빠지면 마물과 조우해도 알림이 안 옵니다.
+
+즉 실제 사용 순서는:
+
+1. `start-live.bat` 실행
+2. ACT에서 브리지 오버레이 등록
+
+입니다.
 
 ### 2-1. 프로그램 직접 실행
 
@@ -93,13 +118,31 @@ ff14-discord-hunt-notify.exe
 ff14-discord-hunt-notify.exe --test
 ```
 
+직접 exe를 실행하는 방식도 가능하지만, 일반 사용자 기준으로는 보통 `start-live.bat` 실행만 하면 충분합니다.
+
 ### 2-2. ACT에 브리지 등록
+
+올려주신 스크린샷 순서대로 하면 됩니다.
 
 ACT에서:
 
-1. `Plugins -> OverlayPlugin.dll -> New`
-2. `Custom` 타입 선택
-3. URL에 아래 경로 입력
+1. `Plugins` 탭으로 이동
+2. `OverlayPlugin.dll` 선택
+3. 왼쪽 아래 `추가` 버튼 클릭
+4. 이름은 예를 들어 `Hunt_Discord`
+5. 프리셋은 `커스텀`
+6. 유형은 `MiniParse`
+7. `확인` 클릭
+8. 생성된 오버레이를 선택한 뒤 URL 오른쪽의 `...` 버튼 클릭
+9. 릴리스 폴더 안의 아래 파일 선택
+
+```text
+overlay/ingest-bridge.html
+```
+
+10. `오버레이 표시`, `오버레이 켜기` 체크
+
+입력해야 하는 URL 경로 예시:
 
 ```text
 file:///C:/경로/ff14-discord-hunt-notify/overlay/ingest-bridge.html
@@ -111,7 +154,20 @@ file:///C:/경로/ff14-discord-hunt-notify/overlay/ingest-bridge.html
 file:///C:/Users/Administrator/Desktop/ffxiv_mamul_codex/overlay/ingest-bridge.html
 ```
 
-정상 연결되면 브리지 오버레이가 연결 상태를 보여줍니다.
+정상 연결되면 브리지 오버레이에 아래와 비슷하게 표시됩니다.
+
+```text
+Bridge armed
+Waiting for filtered log lines
+```
+
+또는
+
+```text
+PLAYER / ZONE / ENDPOINT
+```
+
+형태의 정보가 보입니다.
 
 ## 디스코드에 오는 알림 예시
 
@@ -128,13 +184,19 @@ file:///C:/Users/Administrator/Desktop/ffxiv_mamul_codex/overlay/ingest-bridge.h
 
 - 이 프로그램은 **ACT 로그를 받아서** 동작합니다.
 - 그래서 **ACT + OverlayPlugin 등록**은 꼭 필요합니다.
-- `BAT`은 프로그램을 쉽게 켜는 용도이고,
+- `BAT`은 프로그램 서버를 켜는 용도입니다.
 - `ACT 오버레이 등록`은 게임 로그를 이 프로그램으로 넘기는 용도입니다.
 
 즉 실제 사용에는 보통 아래 두 가지가 모두 필요합니다.
 
 1. 프로그램 실행
 2. ACT 오버레이 등록
+
+한 줄 요약:
+
+- `BAT만 실행` -> 서버만 켜짐, 알림 안 올 수 있음
+- `ACT만 등록` -> 로그는 생기지만 받을 서버가 없음
+- **둘 다 해야 실제 디스코드 알림이 옴**
 
 ---
 
